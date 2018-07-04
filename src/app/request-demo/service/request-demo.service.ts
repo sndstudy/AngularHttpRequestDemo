@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Jsonp, URLSearchParams} from '@angular/http';
+// import { Http, URLSearchParams} from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -8,18 +9,17 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class RequestDemoService {
 
-  constructor(private jsonp: Jsonp) { }
+  constructor(private http: HttpClient) { }
 
   public request(): Observable<any> {
 
     const params = new URLSearchParams();
-    params.set('callback', 'JSONP_CALLBACK');
 
     // Observableを返却
-    return this.jsonp.get('https://connpass.com/api/v1/event/?keyword=python', {search: params}).pipe(
+    return this.http.get('http://localhost:3000').pipe(
 
       // mapで取得したデータの処理をする
-      map(response => response.json() || {}),
+      map(response => response || {}),
 
       // エラーが発生した時の処理をする
       catchError(error => Observable.throw(error.statusText))
