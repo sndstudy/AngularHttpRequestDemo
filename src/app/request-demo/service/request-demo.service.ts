@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-// import { Http, URLSearchParams} from '@angular/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+// import { toPromise } from 'rxjs/add/operator/toPromise';
+// import 'rxjs/add/operator/toPromise';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +14,19 @@ export class RequestDemoService {
 
   public request(): Observable<any> {
 
-    const params = new URLSearchParams();
+    const option: object = {
+      responseType: 'json',
+      observe: 'response'
+    };
 
-    // Observableを返却
-    return this.http.get('http://localhost:3000').pipe(
+    let result: any;
 
-      // mapで取得したデータの処理をする
-      map(response => response || {}),
-
-      // エラーが発生した時の処理をする
-      catchError(error => Observable.throw(error.statusText))
-
+    // Promiseを返却
+    return this.http.request('GET', 'http://localhost:3000', option).pipe(
+      map(val => val),
+      catchError(
+        error => result = error
+      )
     );
   }
 
